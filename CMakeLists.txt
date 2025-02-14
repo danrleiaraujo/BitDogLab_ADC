@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(adc adc.c features/ssd1306.c)
+add_executable(adc adc.c lib/ssd1306.c)
 
 pico_set_program_name(adc "adc")
 pico_set_program_version(adc "0.1")
@@ -44,16 +44,12 @@ pico_set_program_version(adc "0.1")
 pico_enable_stdio_uart(adc 1)
 pico_enable_stdio_usb(adc 1)
 
-#Converte o .pio para .h
-pico_generate_pio_header(adc ${CMAKE_CURRENT_LIST_DIR}/adc.pio)
-
 target_sources(adc PRIVATE adc.c)
 
 # Add the standard library to the build
 target_link_libraries(adc
         pico_stdlib
         pico_bootrom
-        hardware_pio
         )
 
 # Add the standard include files to the build
@@ -64,7 +60,6 @@ target_include_directories(adc PRIVATE
 # Add any user requested libraries
 target_link_libraries(adc 
         hardware_i2c
-        hardware_pio
 	    hardware_adc
 	    hardware_pwm
         pico_bootrom
