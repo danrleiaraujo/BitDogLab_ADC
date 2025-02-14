@@ -65,7 +65,8 @@ target_include_directories(adc PRIVATE
 target_link_libraries(adc 
         hardware_i2c
         hardware_pio
-	        hardware_adc
+	    hardware_adc
+	    hardware_pwm
         pico_bootrom
         )
 

@@ -49,11 +49,12 @@
     [ "oled1:VCC", "pico:3V3", "red", [ "v0" ] ],
     [ "oled1:SDA", "pico:GP15", "blue", [ "v-19.2", "h48.07", "v105.6", "h-220.8", "v-19.24" ] ],
     [ "oled1:SCL", "pico:GP14", "gold", [ "v-28.8", "h67.5", "v124.8", "h-240", "v-38.44" ] ],
-    [ "joystick1:VCC", "pico:3V3", "red", [ "v0" ] ],
-    [ "joystick1:VERT", "pico:GP26", "green", [ "v105.6", "h-67.2", "v9.6" ] ],
+    [ "joystick1:VCC", "pico:3V3", "yellow", [ "v0" ] ],
+    [ "joystick1:VERT", "pico:GP26", "blue", [ "v105.6", "h-67.2", "v9.6" ] ],
     [ "pico:GND.6", "oled1:GND", "black", [ "h9.91", "v-9.6", "h48" ] ],
     [ "joystick1:GND", "pico:GND.8", "black", [ "v0" ] ],
-    [ "r1:1", "rgb26:COM", "black", [ "h-19.2", "v-18.8" ] ]
+    [ "r1:1", "rgb26:COM", "black", [ "h-19.2", "v-18.8" ] ],
+    [ "pico:GP27", "joystick1:HORZ", "red", [ "h0" ] ]
   ],
   "dependencies": {}
 }
