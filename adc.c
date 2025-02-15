@@ -19,9 +19,9 @@
 bool cor = true;
 
 // Led RGB
-const uint LED_B = 11;
-const uint LED_G = 12;
-const uint LED_R = 13;
+const uint LED_B = 13;
+const uint LED_R = 12;
+const uint LED_G = 11;
 
 //converte_joystic k
 #define EIXO_X 26 //Eixo X do JoyStik ADC 0
@@ -63,22 +63,27 @@ int main(){
     stdio_init_all();
 
     // Inicia Leds
-    gpio_init(LED_B);
-    gpio_set_dir(LED_B, GPIO_OUT);
+    gpio_init(LED_G);
+    gpio_set_dir(LED_G, GPIO_OUT);
 
     // Inicia botao A
     gpio_init(BUTTON_A);
     gpio_set_dir(BUTTON_A, GPIO_IN);
     gpio_pull_up(BUTTON_A);
 
+    // Inicia botao B
+    gpio_init(BUTTON_B);
+    gpio_set_dir(BUTTON_B, GPIO_IN);
+    gpio_pull_up(BUTTON_B);
+
     // Inicia joystic 
     gpio_init(BTN_STICK);
     gpio_set_dir(BTN_STICK, GPIO_IN);
     gpio_pull_up(BTN_STICK);
-
+    
     //função para iqr
     gpio_set_irq_enabled_with_callback(BUTTON_A, GPIO_IRQ_EDGE_RISE, true, &callback_botao);
-    gpio_set_irq_enabled_with_callback(BUTTON_A, GPIO_IRQ_EDGE_RISE, true, &callback_botao); //Bootloader
+    gpio_set_irq_enabled_with_callback(BUTTON_B, GPIO_IRQ_EDGE_RISE, true, &callback_botao); //Bootloader
     gpio_set_irq_enabled_with_callback(BTN_STICK, GPIO_IRQ_EDGE_FALL, true, &callback_botao); 
     
     // Inicia ADC
@@ -121,23 +126,45 @@ int main(){
     
     ssd1306_t ssd;
     ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT); // Inicializa o display
-    ssd1306_config(&ssd);                                         // Configura o display
-    printf("ssd on 1 \n");
-    ssd1306_send_data(&ssd);         
-    printf("ssd on 2 \n");
+    ssd1306_config(&ssd);    
+    ssd1306_send_data(&ssd);   
 
-    // Limpa o display. O display inicia com todos os pixels LIGADOS.
-    ssd1306_fill(&ssd, false);
+    // Limpa o display. O display inicia com todos os pixels desligados.
+    ssd1306_fill(&ssd, !cor);
+    ssd1306_rect(&ssd, 31, 63, 8, 8, cor, !cor); // Desenha um retângulo    
     ssd1306_send_data(&ssd);
-        
 
+    int x = 63, y = 31;
 
     while (true){
         converte_joystic(0);
         converte_joystic(1);
         
         pwm_set_gpio_level(LED_R, pulso_x);  
-        pwm_set_gpio_level(LED_B, pulso_y);  
+        pwm_set_gpio_level(LED_B, pulso_y); 
+        printf("pulso x %d\n",pulso_x); 
+        printf("pulso y %d\n",pulso_y); 
+        
+        ssd1306_fill(&ssd, !cor); // Limpa o display
+        
+        if(led_G_ativado)
+            ssd1306_rect(&ssd, 1, 1, 126, 62, cor, !cor); // Desenha um retângulo borda
+
+        if(adc_value_y == 2048){
+            x = 63 ;
+        }
+        else if (adc_value_y > 2048){
+            x = ((adc_value_y - 2048) / 32) + 54;
+        }
+        else{
+            x = (((adc_value_y - 2048)) / 32) + 68;
+        }
+        printf("valor x = %d\n", x);
+        
+        ssd1306_rect(&ssd, 3, 3, 122, 60, cor, !cor); // Desenha um retângulo
+        ssd1306_rect(&ssd, y, x, 8, 8, cor, !cor); // Desenha um retângulo        
+        ssd1306_send_data(&ssd); // Atualiza o display
+
         sleep_ms(100);
     } // Fim While True
 } // Fim main
@@ -148,9 +175,9 @@ int main(){
 void converte_joystic (int input){ 
     // Seleciona 0 ou 1
     adc_select_input(input);
-
+    sleep_us(2);
     if(input == 0){
-        adc_value_x = adc_read();
+        adc_value_x = adc_read(); 
         pulso_x = ((adc_value_x -2048)*255)/2048;
         if (pulso_x < 0){
             pulso_x = pulso_x *(-1);
@@ -182,12 +209,10 @@ void callback_botao(uint gpio, uint32_t events){
         }
         else if(gpio == BUTTON_B){
             reset_usb_boot(0, 0); //func para entrar no modo bootsel 
-
         }        
         else if(gpio == BTN_STICK){
-            gpio_put(LED_G, !led_G_ativado);
             led_G_ativado = !led_G_ativado;
-            
+            gpio_put(LED_G, led_G_ativado);
         }
         last_time = current_time; // Atualiza o tempo para o debounce
     } // debounce
