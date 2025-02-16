@@ -92,7 +92,6 @@ int main(){
     adc_gpio_init(EIXO_Y);
 
     // Inicia PWM
-
     // Inicializa o PWM nos pinos desejados
     gpio_set_function(LED_B, GPIO_FUNC_PWM);
     gpio_set_function(LED_R, GPIO_FUNC_PWM);
@@ -115,10 +114,8 @@ int main(){
     led_R_ativado = 1;
     led_B_ativado = 1;
 
-
     // I2C Initialisation. Using it at 400Khz.
     i2c_init(I2C_PORT, 400 * 1000);
-
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);                    // Set the GPIO pin function to I2C
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);                    // Set the GPIO pin function to I2C
     gpio_pull_up(I2C_SDA);                                        // Pull up the data line
@@ -134,7 +131,7 @@ int main(){
     ssd1306_rect(&ssd, 31, 63, 8, 8, cor, !cor); // Desenha um retângulo    
     ssd1306_send_data(&ssd);
 
-    int x = 63, y = 31;
+    int x = 63, y = 31; // centro do ssd1306
 
     while (true){
         converte_joystic(0);
@@ -142,14 +139,13 @@ int main(){
         
         pwm_set_gpio_level(LED_R, pulso_x);  
         pwm_set_gpio_level(LED_B, pulso_y); 
-        printf("pulso x %d\n",pulso_x); 
-        printf("pulso y %d\n",pulso_y); 
         
         ssd1306_fill(&ssd, !cor); // Limpa o display
         
         if(led_G_ativado)
             ssd1306_rect(&ssd, 1, 1, 126, 62, cor, !cor); // Desenha um retângulo borda
 
+        // Eixo X
         if(adc_value_y == 2048){
             x = 63 ;
         }
@@ -157,12 +153,23 @@ int main(){
             x = ((adc_value_y - 2048) / 32) + 54;
         }
         else{
-            x = (((adc_value_y - 2048)) / 32) + 68;
+            x = (((adc_value_y - 2048)) / 32) + 67;
         }
-        printf("valor x = %d\n", x);
+        
+        // Eixo Y
+        if(adc_value_x == 2048)
+            y = 31;
+        else if(adc_value_x > 2048){
+            y =  67 - (adc_value_x / 64);
+            // y =  ((adc_value_x - 2048) / 64) + 24; PARA VALOR INVERTIDO
+        }
+        else{
+            y = 54 - ((adc_value_x) / 64);
+            // y =  ((adc_value_x - 2048) / 64) + 35; //PARA VALOR INVERTIDO
+        }
         
         ssd1306_rect(&ssd, 3, 3, 122, 60, cor, !cor); // Desenha um retângulo
-        ssd1306_rect(&ssd, y, x, 8, 8, cor, !cor); // Desenha um retângulo        
+        ssd1306_rect(&ssd, y, x, 8, 8, cor, cor); // Desenha um retângulo        
         ssd1306_send_data(&ssd); // Atualiza o display
 
         sleep_ms(100);
@@ -205,7 +212,6 @@ void callback_botao(uint gpio, uint32_t events){
             pwm_set_enabled(slice_blue, led_B_ativado); // habilitar/desabilita o pwm no slice correspondente
             led_R_ativado = !led_R_ativado;
             led_B_ativado = !led_B_ativado;
-
         }
         else if(gpio == BUTTON_B){
             reset_usb_boot(0, 0); //func para entrar no modo bootsel 
