@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-    <img width="400px" src="https://github.com/danrleiaraujo/Comunicacao_Serial_RP2040/tree/main/Comunicacao_Serial_RP2040/src/logo.png"> 
+    <img width="400px" src="https://github.com/danrleiaraujo/BitDogLab_ADC/blob/main/src/logo.png"> 
   <br>
   Unidade 4 - Capítulo 8 - Conversores A/D
   <br>
@@ -47,7 +47,7 @@ O projeto deve cumprir os seguintes requisitos:
 5. **VS Code**: Ambiente de desenvolvimento para código em linguagem C.
 6. **Simulador Wokwi**: Para simulação do circuito.
   <div align="center">
-      <img width="800px" src="https://github.com/danrleiaraujo/Comunicacao_Serial_RP2040/tree/main/Comunicacao_Serial_RP2040/src/image.png" />
+      <img width="800px" src="https://github.com/danrleiaraujo/BitDogLab_ADC/blob/main/src/image.png" />
       <p>Fig 1. Projeto no simulador .</p>
    </div>
    
