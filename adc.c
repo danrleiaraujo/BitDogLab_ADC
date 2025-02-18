@@ -146,13 +146,13 @@ int main(){
             ssd1306_rect(&ssd, 1, 1, 126, 62, cor, !cor); // Desenha um retângulo borda
 
         // Eixo X
-        if(adc_value_y == 2048){
+        if(adc_value_y == 2048){ // Se estiver no meio 
             x = 63 ;
         }
-        else if (adc_value_y > 2048){
+        else if (adc_value_y > 2048){ // Se aumentar os valores
             x = ((adc_value_y - 2048) / 32) + 54;
         }
-        else{
+        else{ // Se diminuir os valores
             x = (((adc_value_y - 2048)) / 32) + 67;
         }
         

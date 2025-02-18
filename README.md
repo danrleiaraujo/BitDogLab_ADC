@@ -2,7 +2,7 @@
   <br>
     <img width="400px" src="https://github.com/danrleiaraujo/Comunicacao_Serial_RP2040/tree/main/Comunicacao_Serial_RP2040/src/logo.png"> 
   <br>
-  Unidade 4 - Capítulo 6 - Introdução a interfaces de comunicação Serial.
+  Unidade 4 - Capítulo 8 - Conversores A/D
   <br>
 </h1>
 <div align="center">
@@ -11,7 +11,7 @@
 
 <div align="center"> 
   
-Esta atividade tem como objetivo usar o Raspberry Pi Pico W para compreender o funcionamento e aplicação de interrupções em microcontroladores, comunicação i2c para acendimento da matriz oled ssd1306 e o uso da matriz de led. O projeto envolve programação em C, integração com o SDK do Raspberry Pi Pico e o simulador Wokwi. 
+Esta atividade tem como objetivo usar o Raspberry Pi Pico W para compreender o funcionamento e aplicação de conversores analógico para digital com aplicação de um joystick e alteração de uma LED RGB através de PWM. O projeto envolve programação em C, integração com o SDK do Raspberry Pi Pico e o simulador Wokwi. 
 </div>
 
 <details open="open">
@@ -35,16 +35,15 @@ O projeto deve cumprir os seguintes requisitos:
 
 1. **Uso de interrupções**: Todas as funcionalidades relacionadas aos botões devem ser implementadas utilizando rotinas de interrupção (IRQ).
 2. **Debouncing**:  É obrigatório implementar o tratamento do bouncing dos botões via software.
-3. **Controle de LEDs**: O projeto deve incluir o uso de LEDs comuns e LEDs WS2812, demonstrando o domínio de diferentes tipos de controle.
-4. **Utilização do Display 128 x 64**: A utilização de fontes maiúsculas e minúsculas demonstrará o domínio do uso de bibliotecas e a utilização do protocolo i2c.
-5. **Organização do código**: O código deve estar bem estruturado e comentado para facilitar o entendimento.
+3. **Utilização do Display 128 x 64**: A utilização de fontes maiúsculas e minúsculas demonstrará o domínio do uso de bibliotecas e a utilização do protocolo i2c.
+4. **Organização do código**: O código deve estar bem estruturado e comentado para facilitar o entendimento.
 
 ## Componentes Utilizados
 
 1. **Raspberry Pi Pico W**: Microcontrolador para controle do sistema.
-2. **Botões**: Interface para entrada de comandos.
-3. **Matriz de LEDs WS2812 (5x5)**: Exibição de Numeros.
-4. **Display 128 x 64:** Exibição de Numeros e caracteres.
+2. **Botões**: Botão A para ativar e desativar os LEDs PWM e Botão B para colocar a placa em modo bootloader.
+3. **Display 128 x 64:** Exibição do quadrado que representa o Joystick.
+3. **Joystick:** Entrada analógica.
 5. **VS Code**: Ambiente de desenvolvimento para código em linguagem C.
 6. **Simulador Wokwi**: Para simulação do circuito.
   <div align="center">
@@ -54,20 +53,19 @@ O projeto deve cumprir os seguintes requisitos:
    
 ## Estrutura do Projeto
 
-- **ws2812b.c**: Código responsável pela configuração e controle da matriz de LEDs.
-- **PIO.c**: Biblioteca para controle do PIO (Programmable Input/Output) do Raspberry Pi Pico W.
-- **desenho.c**: Funções para definição das animações a serem exibidas na matriz de LEDs.
-- **funcoes.c**: Funções auxiliares para controle do sistema.
 - **ssd1306.h**: Funções e configurações do display.
 - **ssd1306.c**: Funções e inicialização do display.
-- **font.h**: Acrescentação de caracteres.
+- **hardware/clocks.h**: Biblioteca para saber o clock e o tempo atual da placa.
+- **hardware/i2c.h**: Biblioteca para o uso da comunicação i2c.
+- **hardware/adc.h**: Biblioteca para o uso do conversor analógico para digital.
+- **hardware/pwm.h**: Biblioteca para o uso do pwm no pino da gpio.
 
 
 ## Funcionalidades 
-- **Entrada de caracteres via PC**: Manda caracteres via serial do pc para a placa bitDogLab e é exibido no display SSD1306.
-- **Entrada de Numeros via PC**: Caso o caractere seja número, será enviada também para a matriz de led ws2812.
-- **Interação botão A**: Pressionar o botão A deve alternar o estado do LED RGB Verde (ligado/desligado) e exibir uma mensagem indicativa no display.
-- **Interação botão B**: Pressionar o botão B deve alternar o estado do LED RGB Azul (ligado/desligado) e exibir uma mensagem indicativa no display.
+- **Interação botão A**: Pressionar o botão A deve alternar a ativação do PWM nas LEDs selecionadas (Azul e Vermelho).
+- **Interação botão B**: Pressionar o botão B deve alterar o estado da placa para bootloader.
+- **Botão do Joystick**: Ativa a LED Verde e modifica a borda para indicar que foi pressionado.
+- **Joystick**: Modifica a localização do quadrado que aparece na tela.
 
 
 ## Como Executar
@@ -85,7 +83,7 @@ O projeto deve cumprir os seguintes requisitos:
 1. **Clonar o repositório**: Clone o repositório utilizando o comando Git no terminal:
    
    ```bash
-   git clone https://github.com/danrleiaraujo/BitDogLabInterrupcao.git
+   git clone https://github.com/danrleiaraujo/BitDogLab_ADC.git
    ```
 2. Abrir no VS Code: Abra a pasta clonada no VS Code e no terminal do VS Code, vá até a pasta do projeto.
 3. Compilar o código.
@@ -93,7 +91,7 @@ O projeto deve cumprir os seguintes requisitos:
 
    
 ## Vídeo Demonstração
-  https://drive.google.com/file/d/1sythUCN-Bra0ZbPk1jXvzwqktAxcZ2Pb/view?usp=sharing
+  https://drive.google.com/file/d/1khyDUXqY100_UuYUsnzF8mRWS23438BW/view?usp=sharing
 
   
 ## Autor
